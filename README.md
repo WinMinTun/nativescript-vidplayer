@@ -6,7 +6,7 @@ NativeScript Video Player with Fullscreen, auto-play, on complete and on error c
 Currently only support Android. Any collaborator for iOS support is welcomed!
 
 ##Android side
-![alt tag](https://bytebucket.org/win_min_tun/nativescript-tag/raw/ae7c2b070de75c81898493d4b5d26892321612c9/demo/screenshots/Android.png)
+![alt tag](https://bytebucket.org/win_min_tun/nativescript-vidplayer/raw/6246d11e592626b37c72996bbb82914aa86d8b56/demo/screenshots/Android.png)
 
 ## Usage
 
