@@ -1,0 +1,17 @@
+//default elements
+android {
+  productFlavors {
+    "nativescript-vidplayer" {
+      dimension "nativescript-vidplayer"
+    }
+  }
+}
+
+repositories {
+    jcenter();
+}
+
+//optional elements
+dependencies {
+    compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.2'
+}
