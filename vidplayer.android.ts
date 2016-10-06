@@ -47,6 +47,8 @@ export class Vidplayer extends common.VidPlayer {
 
     autoPlay: boolean = false; // auto start or not
 
+    fullScreen: boolean = true; // fullScreen btn hide/show
+
     private _vidPlayer;
 
     private _android: any;
@@ -72,19 +74,27 @@ export class Vidplayer extends common.VidPlayer {
         this._vidPlayer = new FullscreenVideoLayout(context);
         this._vidPlayer.setActivity(context);
         
-        let f = this._vidPlayer.getClass().getDeclaredField("imgfullscreen"); //NoSuchFieldException
+        // Fullscreen button        
+        let f = this._vidPlayer.getClass().getDeclaredField("imgfullscreen");
         f.setAccessible(true);
         let fullScreenBtn = f.get(this._vidPlayer);
-        fullScreenBtn.setOnClickListener(new android.view.View.OnClickListener({
-            onClick: (view) => {
 
-                // hide other elements
-                this._vidPlayer.setFullscreen(!this._vidPlayer.isFullscreen());
+        if (this.fullScreen) {
+            fullScreenBtn.setOnClickListener(new android.view.View.OnClickListener({
+                onClick: (view) => {
 
-                // rotate to landscape, hide status bar, nav bar and enter immersive sticky         
-                this.goFullScreen(this._vidPlayer.isFullscreen());
-            }
-        }));
+                    // hide other elements
+                    this._vidPlayer.setFullscreen(!this._vidPlayer.isFullscreen());
+
+                    // rotate to landscape, hide status bar, nav bar and enter immersive sticky         
+                    this.goFullScreen(this._vidPlayer.isFullscreen());
+                }
+            }));
+
+        } else {
+            fullScreenBtn.setVisiblity(android.view.View.GONE); // hide fullscreen btn
+        }
+        
 
         // set on completion listener
         this._vidPlayer.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({

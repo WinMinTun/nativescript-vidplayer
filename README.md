@@ -27,6 +27,10 @@ Video source (online or local)
 
 Auto play true/false
 
+- **fullScreen** - *optional*
+
+Default is true. Fullscreen button hide/show
+
 - **onComplete** - *optional*
 
 on complete callback
