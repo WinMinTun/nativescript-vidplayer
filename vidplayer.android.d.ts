@@ -4,6 +4,7 @@ export declare class Vidplayer extends common.VidPlayer {
     onComplete: any;
     onError: any;
     autoPlay: boolean;
+    fullScreen: boolean;
     private _vidPlayer;
     private _android;
     private _ios;
