@@ -47,7 +47,7 @@ export class Vidplayer extends common.VidPlayer {
 
     autoPlay: boolean = false; // auto start or not
 
-    fullScreen: boolean = true; // fullScreen btn hide/show
+    private _fullScreen: boolean = true; // fullScreen btn hide/show
 
     private _vidPlayer;
 
@@ -57,6 +57,8 @@ export class Vidplayer extends common.VidPlayer {
     private _portraitWidth: number;
     private _portraitHeight: number;
 
+    private _fullScreenBtn: any;
+
     get android() {
         return this._android;
     }
@@ -65,22 +67,43 @@ export class Vidplayer extends common.VidPlayer {
         return this._vidPlayer;
     }
 
+    get fullScreen(): boolean {
+        return this._fullScreen;
+    }
+
+    set fullScreen(val: boolean) {
+        if (val !== this._fullScreen) {
+            this._fullScreen = val;
+            this.notifyPropertyChange('fullScreen', val);
+
+            if (this._fullScreenBtn) {
+                if (val) {
+                    this._fullScreenBtn.setVisibility(android.view.View.VISIBLE);
+                } else {
+                    this._fullScreenBtn.setVisibility(android.view.View.INVISIBLE);
+                }
+            }
+            
+        }
+    }
+
+
     // create native ui
     _createUI() {
+
         let context = app.android.currentContext;
 
         let FullscreenVideoLayout = com.github.rtoshiro.view.video.FullscreenVideoLayout;
-
         this._vidPlayer = new FullscreenVideoLayout(context);
         this._vidPlayer.setActivity(context);
         
         // Fullscreen button        
         let f = this._vidPlayer.getClass().getDeclaredField("imgfullscreen");
         f.setAccessible(true);
-        let fullScreenBtn = f.get(this._vidPlayer);
+        this._fullScreenBtn = f.get(this._vidPlayer);
 
         if (this.fullScreen) {
-            fullScreenBtn.setOnClickListener(new android.view.View.OnClickListener({
+            this._fullScreenBtn.setOnClickListener(new android.view.View.OnClickListener({
                 onClick: (view) => {
 
                     // hide other elements
@@ -92,7 +115,7 @@ export class Vidplayer extends common.VidPlayer {
             }));
 
         } else {
-            fullScreenBtn.setVisiblity(android.view.View.GONE); // hide fullscreen btn
+            this._fullScreenBtn.setVisibility(android.view.View.INVISIBLE); // hide fullscreen btn
         }
         
 
@@ -113,6 +136,37 @@ export class Vidplayer extends common.VidPlayer {
                     return true;
                 }
                 return false;
+            }
+        }));
+
+        // modify control behaviour to auto hide controls after a certain time at startup & other times
+        f = this._vidPlayer.getClass().getDeclaredField("videoControlsView");
+        f.setAccessible(true);
+        let videoControlsView = f.get(this._vidPlayer);
+
+        // at startup
+        this._vidPlayer.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener({
+            onPrepared: (mediaPlayer) => {
+                if (videoControlsView != null) {
+                    setTimeout(()=> {
+                        this._vidPlayer.hideControls();
+                    }, 4000);
+                }
+            }
+        }));
+
+        // when user taps
+        this._vidPlayer.setOnTouchListener(new android.view.View.OnTouchListener({
+            onTouch: (view, motionEvent): boolean => {
+                if (motionEvent.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    if (videoControlsView != null) {
+                        setTimeout(()=> {
+                            this._vidPlayer.hideControls();
+                        }, 4000);
+                    }
+                }
+
+                return true;
             }
         }));
 
