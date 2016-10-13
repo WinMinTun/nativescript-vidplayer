@@ -87,6 +87,11 @@ export class Vidplayer extends common.VidPlayer {
         }
     }
 
+    // check the player fullscreen status
+    get isFullScreen(): boolean {
+        return this._vidPlayer.isFullscreen();
+    }
+
 
     // create native ui
     _createUI() {

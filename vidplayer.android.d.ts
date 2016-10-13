@@ -14,6 +14,7 @@ export declare class Vidplayer extends common.VidPlayer {
     android: any;
     vidPlayer: any;
     fullScreen: boolean;
+    isFullScreen: boolean;
     _createUI(): void;
     goFullScreen(isFullScreen: boolean): void;
 }
