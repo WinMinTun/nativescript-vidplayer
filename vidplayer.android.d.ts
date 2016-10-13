@@ -15,5 +15,5 @@ export declare class Vidplayer extends common.VidPlayer {
     vidPlayer: any;
     fullScreen: boolean;
     _createUI(): void;
-    private goFullScreen(isFullScreen);
+    goFullScreen(isFullScreen: boolean): void;
 }

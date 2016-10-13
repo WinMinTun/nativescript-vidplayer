@@ -105,12 +105,9 @@ export class Vidplayer extends common.VidPlayer {
         if (this.fullScreen) {
             this._fullScreenBtn.setOnClickListener(new android.view.View.OnClickListener({
                 onClick: (view) => {
-
-                    // hide other elements
-                    this._vidPlayer.setFullscreen(!this._vidPlayer.isFullscreen());
-
-                    // rotate to landscape, hide status bar, nav bar and enter immersive sticky         
-                    this.goFullScreen(this._vidPlayer.isFullscreen());
+                    // toggle fullscreen
+                    let toggleFullScreen = !this._vidPlayer.isFullscreen();
+                    this.goFullScreen(toggleFullScreen);
                 }
             }));
 
@@ -174,8 +171,12 @@ export class Vidplayer extends common.VidPlayer {
         this._android = this._vidPlayer;
     }
 
-    private goFullScreen(isFullScreen: boolean) {
-
+    public goFullScreen(isFullScreen: boolean) {
+        
+        // hide other elements
+        this._vidPlayer.setFullscreen(isFullScreen);
+        
+        // rotate to landscape, hide status bar, nav bar and enter immersive sticky
         var View = android.view.View;
 
         if (isFullScreen) {

@@ -1,6 +1,6 @@
 {
   "name": "nativescript-vidplayer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NativeScript video player with fullscreen support",
   "main": "vidplayer.js",
   "typings": "index.d.ts",
