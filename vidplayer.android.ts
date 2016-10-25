@@ -195,9 +195,9 @@ export class Vidplayer extends common.VidPlayer {
                 var decorView = window.getDecorView();
                 // Hide the status bar, navigation bar, and enter immersive sticky.
                 let uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    //| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    //| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                     | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
                 decorView.setSystemUiVisibility(uiOptions);
@@ -215,8 +215,21 @@ export class Vidplayer extends common.VidPlayer {
                 this._portraitWidth = this.width;
                 this._portraitHeight = this.height;
 
-                this.height = platform.screen.mainScreen.widthDIPs;
-                this.width = platform.screen.mainScreen.heightDIPs;
+                let sdkVer: any = platform.device.sdkVersion;                
+
+                // navigation bar is added in API 17
+                if (sdkVer >= 17) { 
+                    let wm = <android.view.WindowManager> app.android.context.getSystemService(android.content.Context.WINDOW_SERVICE);
+                    let display = wm.getDefaultDisplay();
+                    let screenSize = new android.graphics.Point();
+                    display.getRealSize(screenSize);
+                    this.height = this.convertPxToDp(screenSize.y);
+                    this.width = this.convertPxToDp(screenSize.x);
+                } else {
+                    this.height = platform.screen.mainScreen.widthDIPs;
+                    this.width = platform.screen.mainScreen.heightDIPs;
+                }
+                
             });
 
         } else {
@@ -240,6 +253,15 @@ export class Vidplayer extends common.VidPlayer {
                 this.width = this._portraitWidth;
             });
         }
+    }
+
+
+    private convertPxToDp(pixel) {
+        let metrics = new android.util.DisplayMetrics();
+        let wm = <android.view.WindowManager> app.android.context.getSystemService(android.content.Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        let logicalDensity = metrics.density;
+        return java.lang.Math.ceil(pixel / logicalDensity);
     }
 
 }
